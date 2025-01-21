@@ -42,6 +42,7 @@ config/xml/*
 # Themes, modules and overrides
 
 modules/*
+!modules/cmusedcouponsstats/
 override/*
 !/override/modules/
 
