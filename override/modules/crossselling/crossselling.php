@@ -12,12 +12,21 @@ class CrossSellingOverride extends CrossSelling
      * @param array $products_id an array of product ids
      * @return array
      */
-    protected function getOrderProducts(array $products_id)
+    protected function getOrderProducts(array $products_id, $context = 'product')
     {
+        $ordersConditions = '';
+
+        if ($context == 'cart') {
+            $ordersConditions = 'AND DATE(o.delivery_date) >= (CURDATE() - INTERVAL 2 MONTH)';
+        }
+
         $q_orders = 'SELECT o.id_order
-        FROM '._DB_PREFIX_.'orders o
-        LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
-        WHERE o.valid = 1 AND od.product_id IN ('.implode(',', $products_id).') AND DATE(date_add) >= (CURDATE() - INTERVAL 2 MONTH)';
+            FROM '._DB_PREFIX_.'orders o
+            LEFT JOIN '._DB_PREFIX_.'order_detail od ON (od.id_order = o.id_order)
+            WHERE o.valid = 1
+            ' . $ordersConditions . '
+            AND od.product_id IN ('.implode(',', $products_id).')';
+
         $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($q_orders);
 
         $final_products_list = array();
@@ -88,5 +97,38 @@ class CrossSellingOverride extends CrossSelling
         }
 
         return $final_products_list;
+    }
+
+    /**
+     * Returns module content
+     */
+    public function hookshoppingCart($params)
+    {
+        if (!$params['products']) {
+            return;
+        }
+
+        $products_id = array();
+        foreach ($params['products'] as $product) {
+            $products_id[] = (int)$product['id_product'];
+        }
+
+        $cache_id = 'crossselling|shoppingcart|'.implode('|', $products_id);
+
+        if (!$this->isCached('crossselling.tpl', $this->getCacheId($cache_id))) {
+            $final_products_list = $this->getOrderProducts($products_id, 'cart');
+
+            if (count($final_products_list) > 0) {
+                $this->smarty->assign(
+                    array(
+                        'orderProducts' => $final_products_list,
+                        'middlePosition_crossselling' => round(count($final_products_list) / 2, 0),
+                        'crossDisplayPrice' => Configuration::get('CROSSSELLING_DISPLAY_PRICE')
+                    )
+                );
+            }
+        }
+
+        return $this->display(__FILE__, 'crossselling.tpl', $this->getCacheId($cache_id));
     }
 }
