@@ -1,0 +1,6 @@
+Dobrý deň,
+
+v prílohe nájdete informácie o produkte {product_name}, ktorého skladová zásoba klesla na 0 ks.
+
+S pozdravom,
+Váš PrestaShop systém

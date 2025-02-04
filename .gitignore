@@ -43,6 +43,7 @@ config/xml/*
 
 modules/*
 !modules/cmusedcouponsstats/
+!modules/cmstocknotifications/
 override/*
 !/override/modules/
 

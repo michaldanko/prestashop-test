@@ -1,0 +1,6 @@
+Hello,
+
+the stock of product {product_name} has reached 0. Please check the attached CSV file for details.
+
+Best regards,
+PrestaShop System

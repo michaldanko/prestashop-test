@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>cmstocknotifications</name>
+	<displayName><![CDATA[Custom Module - Stock Notifications]]></displayName>
+	<version><![CDATA[1.0.0]]></version>
+	<description><![CDATA[Generates a CSV file and sends an email when a product&#039;s stock reaches zero.]]></description>
+	<author><![CDATA[Michal Danko]]></author>
+	<tab><![CDATA[administration]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>
